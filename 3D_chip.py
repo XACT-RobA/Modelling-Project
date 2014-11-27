@@ -103,7 +103,7 @@ def x(u0, t, T):
     jp1 = h[1]*(1-exp(pe1))
     jp2 = 1-exp(pe2)
     # Combine the parts of xj(t)
-    j = ip1/ip2
+    j = jp1/jp2
     # Parts of xk(t)
     kp1 = (m*g*t)/mu
     kp2 = (mu*h[2])-(m*g*T)
