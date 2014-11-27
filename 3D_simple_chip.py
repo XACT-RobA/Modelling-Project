@@ -3,9 +3,9 @@ import numpy
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d.axes3d as p3
 # Set constants
-# theta = 20 degrees
+# theta from degrees to radians
 theta = math.radians(20)
-# vector position of the hole
+# Vector position of the hole
 hole = numpy.array([10, 8, 0.1])
 h = hole
 # Gravitational constant
@@ -39,6 +39,7 @@ else:
 
 # Find the value of t when the ball gets to the hole
 def find_T():
+    # The function is split into two parts to make debugging easier
     p1 = (2*h[2]/a)
     # Use xi and xk if hi does not equal 0
     if h[0] != 0:
@@ -46,6 +47,7 @@ def find_T():
     # Use xj and xk otherwise
     else:
         p2 = ((2*h[1]/a)*cot(theta)*cosec(gamma))
+    # Combine the two parts of the equation
     T = math.sqrt(p1-p2)
     return T
 

@@ -3,9 +3,9 @@ import numpy
 import matplotlib.pyplot as this_plot
 
 # Set constants
-# theta = 20 degrees
+# theta from degrees to radians
 theta = math.radians(20)
-# vector position of the hole
+# Vector position of the hole
 hole = numpy.array([20, 0, 0])
 h = hole
 # Gravitational constant
@@ -23,8 +23,10 @@ def sqrt(a):
 
 # Find the value of t when the ball gets to the hole
 def find_T():
+    # The function is split into two parts to make debugging easier
     p1 = 2*h[2]/a
     p2 = (2*h[0]/a)*tan(theta)
+    # Combine the two parts of the equation
     T = sqrt(p1 - p2)
     return T
 
