@@ -50,6 +50,7 @@ def x(u0, t):
 # Returns the vector velocity of the golf ball at a given time t
 def dx(u0, t):
     # dxi(t)/dt
+    # Constant for simple model
     i = u0*cos(theta)
     # dxj(t)/dt = 0 since 2D
     j = 0
