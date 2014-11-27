@@ -28,9 +28,9 @@ def exp(a):
 def F(T):
     pe1 = -(mu/m)*T
     p1 = T*mu*m*g
-    p2 = (m**2)*g*cos(theta)
+    p2 = (m**2)*g
     p3 = 1-exp(pe1)
-    p4 = (mu**2)*h[0]*sec(theta)
+    p4 = (mu**2)*h[0]*tan(theta)
     p5 = (mu**2)*h[2]
     f = p1-(p2*p3)+p4-p5
     return f
