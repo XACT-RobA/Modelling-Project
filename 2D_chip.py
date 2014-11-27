@@ -62,14 +62,6 @@ def x(u0, t, T):
     kp6 = kp3
     k = kp1+(kp2/kp3)+((kp4*kp5)/kp6)
     
-    '''
-    kp1 = (t*m*g)/mu
-    kp2 = (T*m*g)-(mu*h[2])
-    kp3 = 1+exp(pe1)
-    kp4 = mu*(1-exp(pe2))
-    k = kp1-((kp2*kp3)/kp4)
-    '''
-    
     this_x = numpy.array([i, 0, k])
     return this_x
 
@@ -79,13 +71,15 @@ def dx(u0, t, T):
     
     ip1 = mu*h[0]*exp(pe1)
     ip2 = m*(1-exp(pe2))
+    i = ip1/ip2
     
     kp1 = (m*g)/mu
     kp2 = (mu*h[2])-(T*m*g)
     kp3 = exp(pe1)
     kp4 = m*(1-exp(pe2))
+    k = kp1+((kp2*kp3)/kp4)
     
-    this_dx = kp1+((kp2*kp3)/kp4)
+    this_dx = numpy.array([i, 0, k])
     return this_dx
 
 T = find_T()[0]
