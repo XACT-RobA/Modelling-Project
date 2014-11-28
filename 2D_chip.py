@@ -141,10 +141,3 @@ for i in range(len(x_range)):
 # x = xi(t), y = xk(t)
 this_plot.plot(xplot, yplot)
 this_plot.show()
-    
-    
-    
-    
-    
-    
-    

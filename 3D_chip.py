@@ -179,7 +179,3 @@ fig = plt.figure()
 ax = p3.Axes3D(fig)
 ax.plot(xplot, zplot, yplot)
 plt.show()
-
-
-
-
