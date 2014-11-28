@@ -16,6 +16,10 @@ g = -9.81
 mu = 0.05
 # Mass of golf ball
 m = 0.045
+# Vector wind coefficient
+wind = numpy.array([-5, 0, 0])
+# w is an estimate of how much the wind affects the ball
+w = mu * wind
 
 # Import useful maths functions
 def sin(a):
@@ -24,10 +28,10 @@ def cos(a):
     return math.cos(a)
 def tan(a):
     return math.tan(a)
-def sec(a):
-    return 1.0/cos(a)
 def cosec(a):
     return 1.0/sin(a)
+def sec(a):
+    return 1.0/cos(a)
 def atan(a):
     return math.atan(a)
 def exp(a):
@@ -46,26 +50,37 @@ def F(T):
     # The function is split into parts to make debugging the equation easier
     # pe1 is the value used with e
     pe1 = -(mu/m)*T
-    # pn is part n
-    p1 = T*mu*m*g
-    p2 = (m**2)*g
-    p3 = 1-exp(pe1)
+    # f is split becuase I had errors
     # Use xi and xk if hi does not equal 0
-    if h[0] != 0: 
-        p4 = (mu**2)*h[0]*tan(theta)*sec(gamma)
-    # Use xj and xk otherwise
+    if h[0] != 0:
+        # u0 (i)
+        ip1 = (w[0]/mu)*sec(theta)*sec(gamma)
+        ip2 = ((mu*h[0])-(w[0]*T))*sec(theta)*sec(gamma)
+        ip3 = m*(1-exp(pe1))
+        fi = ip1+(ip2/ip3)
+        fij = fi
+    # Otherwise use xj and xk
     else:
-        p4 = (mu**2)*h[1]*tan(theta)*cosec(gamma)
-    p5 = (mu**2)*h[2]
-    # Combine all of the parts into one equation
-    f = p1-(p2*p3)+p4-p5
+        # u0 (j)
+        jp1 = (w[1]/mu)*sec(theta)*cosec(gamma)
+        jp2 = ((mu*h[1])-(w[1]*T))*sec(theta)*cosec(gamma)
+        jp3 = m*(1-exp(pe1))
+        fj = jp1+(jp2/jp3)
+        fij = fj
+    # u0 (k)
+    kp1 = ((m*g)+w[2])*cosec(theta)/mu
+    kp2 = ((mu*h[2])-(T*((m*g)+w[2])))*cosec(theta)
+    kp3 = m*(1-exp(pe1))
+    fk = kp1+(kp2/kp3)
+    # Combine both parts into one equation
+    f = fij-fk
     return f
 
 # Use fsolve to find the value of T
 # fsolve finds when F(T) = 0 using numerical analysis
 def find_T():
     # Use 0 as the starting point
-    T = fsolve(F, 0)[0]
+    T = fsolve(F, 0.1)[0]
     return T
 
 # Find the initial velocity from T value
@@ -73,15 +88,15 @@ def find_u0(T):
     # The function is split into parts
     # pe1 is the value used with e
     pe1 = -(mu/m)*T
-    # Use xi and xk if hi does not equal 0
     if h[0] != 0:
-        p1 = mu*h[0]*sec(theta)*sec(gamma)
-    # Use xj and xk otherwise
+        p1 = (w[0]/mu)*sec(theta)*sec(gamma)
+        p2 = ((mu*h[0])-(w[0]*T))*sec(theta)*sec(gamma)
     else:
-        p1 = mu*h[1]*sec(theta)*cosec(gamma)
-    p2 = m*(1-exp(pe1))
+        p1 = (w[1]/mu)*sec(theta)*cosec(gamma)
+        p2 = ((mu*h[1])-(w[1]*T))*sec(theta)*cosec(gamma)
+    p3 = m*(1-exp(pe1))
     # Combine all of the parts into one equation
-    u0 = p1/p2
+    u0 = p1+(p2/p3)
     return u0
 
 # The equation for x(t)
@@ -92,24 +107,26 @@ def x(u0, t, T):
     pe1 = -(mu/m)*t
     pe2 = -(mu/m)*T
     # Parts of xi(t)
-    ip1 = h[0]*(1-exp(pe1))
-    ip2 = 1-exp(pe2)
+    ip1 = (w[0]*t)/mu
+    ip2 = ((mu*h[0])-(w[0]*T))
+    ip3 = 1-exp(pe1)
+    ip4 = mu*(1-exp(pe2))
     # Combine the parts of xi(t)
-    i = ip1/ip2
+    i = ip1+((ip2*ip3)/ip4)
     # Parts of xj(t)
-    jp1 = h[1]*(1-exp(pe1))
-    jp2 = 1-exp(pe2)
+    jp1 = (w[1]*t)/mu
+    jp2 = ((mu*h[1])-(w[1]*T))
+    jp3 = ip3
+    jp4 = ip4
     # Combine the parts of xj(t)
-    j = jp1/jp2
+    j = jp1+((jp2*jp3)/jp4)
     # Parts of xk(t)
-    kp1 = (m*g*t)/mu
-    kp2 = (mu*h[2])-(m*g*T)
-    kp3 = mu*(1-exp(pe2))
-    kp4 = (m*g*T)-(mu*h[2])
-    kp5 = exp(pe1)
-    kp6 = kp3
+    kp1 = ((m*g)+w[2])*t/mu
+    kp2 = (mu*h[2])-(T*((m*g)+w[2]))
+    kp3 = ip3
+    kp4 = ip4
     # Combine the parts of xk(t)
-    k = kp1+(kp2/kp3)+((kp4*kp5)/kp6)
+    k = kp1+((kp2*kp3)/kp4)
     # Return x as vector
     this_x = numpy.array([i, j, k])
     return this_x
@@ -120,20 +137,24 @@ def dx(u0, t, T):
     pe1 = -(mu/m)*t
     pe2 = -(mu/m)*T
     # Parts of dxi(t)/dt
-    ip1 = mu*h[0]*exp(pe1)
-    ip2 = m*(1-exp(pe2))
+    ip1 = w[0]/mu
+    ip2 = ((mu*h[0])-(w[0]*T))
+    ip3 = exp(pe1)
+    ip4 = m*(1-exp(pe2))
     # Combine the parts of dxi(t)/dt
-    i = ip1/ip2
+    i = ip1+((ip2*ip3)/ip4)
     # Parts of dxj(t)/dt
-    jp1 = mu*h[1]*exp(pe1)
-    jp2 = m*(1-exp(pe2))
+    jp1 = w[1]/mu
+    jp2 = ((mu*h[1])-(w[1]*T))
+    jp3 = ip3
+    jp4 = ip4
     # Combine the parts of dxj(t)/dt
-    j = jp1/jp2
+    j = jp1+((jp2*jp3)/jp4)
     # Parts of dxk(t)/dt
-    kp1 = (m*g)/mu
-    kp2 = (mu*h[2])-(T*m*g)
-    kp3 = exp(pe1)
-    kp4 = m*(1-exp(pe2))
+    kp1 = ((m*g)+w[2])/mu
+    kp2 = (mu*h[2])-(T*((m*g)+w[2]))
+    kp3 = ip3
+    kp4 = ip4
     # Combine the parts of dxk(t)/dt
     k = kp1+((kp2*kp3)/kp4)
     # Return dx/dt as vector
