@@ -10,8 +10,16 @@ def sqrt(a):
     return np.sqrt(a)
 
 def do_bounce((ui, uj, uk), (xi, xj, xk), (dzi, dzj)):
-    theta_in = atan(U[2]/U[0])
-    gamma_in = atan(U[2]/U[1])
+    if ui != 0.0:
+        theta_in = atan(uk/ui)
+    else:
+        theta_in = 0.0
+        
+    if uj != 0.0:
+        gamma_in = atan(uk/uj)
+    else:
+        gamma_in = 0.0
+    
     omega_i = atan(dzi)
     omega_j = atain(dzj)
     theta_out = theta_in+omega_i
