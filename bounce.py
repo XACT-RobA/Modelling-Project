@@ -2,14 +2,15 @@ import math
 import numpy as np
 
 # Coefficient of restitution
-alpha = 0.8
+alpha = 0.5
 
 def atan(a):
     return math.atan(a)
 def sqrt(a):
     return np.sqrt(a)
 
-def do_bounce((ui, uj, uk), (xi, xj, xk), (dzi, dzj)):
+def do_bounce(this_dx, (dzi, dzj)):
+    [ui, uj, uk] = this_dx
     if ui != 0.0:
         theta_in = atan(uk/ui)
     else:
@@ -21,7 +22,7 @@ def do_bounce((ui, uj, uk), (xi, xj, xk), (dzi, dzj)):
         gamma_in = 0.0
     
     omega_i = atan(dzi)
-    omega_j = atain(dzj)
+    omega_j = atan(dzj)
     theta_out = theta_in+omega_i
     gamma_out = gamma_in+omega_j
     U = sqrt((ui**2)+(uj**2)+(uk**2))
