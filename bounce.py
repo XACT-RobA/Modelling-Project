@@ -27,7 +27,7 @@ def do_bounce(this_dx, (dzi, dzj)):
         
     # Calculate new angles
     omega_i = atan(dzi)
-    omega_j = atan(dzj)
+    omega_j = -atan(dzj)
     theta_out = theta_in+omega_i
     gamma_out = gamma_in+omega_j
     # Calculate the input speed from input velocity
