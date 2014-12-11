@@ -156,4 +156,6 @@ for i in range(len(x_range)):
 # Plot the graph of xi(t) against xk(t) 
 # x = xi(t), y = xk(t)
 this_plot.plot(xplot, yplot)
+this_plot.xlabel('xi(t) (metres)')
+this_plot.ylabel('xj(t) (metres)')
 this_plot.show()

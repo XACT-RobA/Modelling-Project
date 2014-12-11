@@ -125,4 +125,7 @@ for i in range(len(x_range)):
 fig = plt.figure()
 ax = p3.Axes3D(fig)    
 ax.plot(xplot, zplot, yplot)
+ax.set_xlabel('xi(t) (metres)')
+ax.set_zlabel('xj(t) (metres)')
+ax.set_ylabel('xk(t) (metres)')
 plt.show()
