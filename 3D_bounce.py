@@ -6,22 +6,24 @@ import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d.axes3d as p3
 
 def z(i, j):
-    return ((0.02*i)+(0.02*j))
+    return ((0.02*i)+(0.00*j))
 
 def dz(i,j):
-    return (0.02, 0.02)
+    return (0.02, 0.00)
 
 starttime = time.time()
 
 # Vector position of the hole
-h = hole = np.array([20, 0, z(20, 0)])
+ii = 10
+jj = 0
+h = hole = np.array([ii, jj, z(ii, jj)])
 # Gravitational constant
 a = -9.81
 # Air resistance
-mu = 0.05
+mu = 0.009
 # Mass of golf ball
 m = 0.045
-wind = np.array([-5, 0, 0])
+wind = np.array([0, 0, 0])
 w = wind*mu
 
 # Number of bounces
@@ -169,7 +171,7 @@ def test_speed(u0, gamma):
     return (x_total_array, iter_count, closest_to_hole)
 
 def do_loop(u0_lower, u0_upper, gamma):
-    u0_range = np.arange(u0_lower, u0_upper, ((u0_upper-u0_lower)/500.0))
+    u0_range = np.arange(u0_lower, u0_upper, ((u0_upper-u0_lower)/300.0))
     x_total_array = [None]*len(u0_range)
     iter_count = [None]*len(u0_range)
     closest_to_hole = [None]*len(u0_range)
@@ -177,7 +179,8 @@ def do_loop(u0_lower, u0_upper, gamma):
         (x_total_array[i], iter_count[i], closest_to_hole[i]) = test_speed(u0_range[i], gamma)
     return (x_total_array, iter_count, closest_to_hole, u0_range)
 
-gamma_range = np.arange(gammai-(pi/4), gammai+(pi/4), (pi/2)/100)
+no_of_angles = 100.0
+gamma_range = np.arange(gammai-(pi/4), gammai+(pi/4), (pi/2)/no_of_angles)
 
 total_range = []
 x_total_array_array = []
@@ -187,7 +190,9 @@ u0_range_array = []
 
 for g in range(len(gamma_range)):
     gamma = gamma_range[g]
-    (x_total_array, iter_count, closest_to_hole, u0_range) = do_loop(0, 40, gamma)
+    if ((g+1)%(no_of_angles/10.0) == 0.0):
+        print(str((g+1)*(100.0/no_of_angles))+' %')
+    (x_total_array, iter_count, closest_to_hole, u0_range) = do_loop(10, 40, gamma)
     x_total_array_array.append(x_total_array)
     iter_count_array.append(iter_count)
     closest_to_hole_array.append(closest_to_hole)
@@ -205,15 +210,15 @@ putted = []
 
 for i in range(len(closest_to_hole_array)):
     for j in range(len(closest_to_hole_array[i])):
-        #print(closest_to_hole[j][i])
-        if closest_to_hole[j][i] <= 0.054:
-            putted.append('u0: ' + str(u0_range[i]) + ' , gamma: ' + str(gamma_range[j]))
+        if closest_to_hole_array[i][j][0] <= 0.54:
+            putted.append('u0: ' + str(u0_range[j]) + ' , gamma: ' + str(gamma_range[i]))
 
-print(putted)
+for i in range(len(putted)):
+    print(putted[i])
         
         
 '''
-(x_array, iter_count, closest_to_hole) = test_speed(34.3)
+(x_array, iter_count, closest_to_hole) = test_speed(10, 0.01)
         
 xplot = []
 yplot= []
@@ -223,11 +228,10 @@ for i in range(len(x_array[0])):
     xplot.append(x_array[0][i][0][0])
     yplot.append(x_array[0][i][0][2])
     zplot.append(x_array[0][i][0][1])
-    
-print yplot
 
 fig = plt.figure()
 ax = p3.Axes3D(fig)
 ax.plot(xplot, zplot, yplot)
 plt.show()
 '''
+

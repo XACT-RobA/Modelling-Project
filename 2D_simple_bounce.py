@@ -129,7 +129,7 @@ def do_loop(u0_lower, u0_upper):
         (x_total_array[i], iter_count[i], closest_to_hole[i]) = test_speed(u0_range[i])
     return (x_total_array, iter_count, closest_to_hole, u0_range)
         
-
+'''
 (x_total_array, iter_count, closest_to_hole, u0_range) = do_loop(0, 20)
 print(sum(iter_count))
 putted = []
@@ -145,6 +145,9 @@ for i in range(len(putted)):
         print(u0_range[i])
 
 '''
+
+(x_total_array, iter_count, closest_to_hole) = test_speed(15.96)
+
 xplot = []
 yplot= []
 zplot = []
@@ -157,4 +160,4 @@ fig = plt.figure()
 ax = p3.Axes3D(fig)
 ax.plot(xplot, zplot, yplot)
 plt.show()
-'''
+
