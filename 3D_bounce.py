@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d.axes3d as p3
 
 def z(i, j):
-    return ((0.02*i)+(0.00*j))
+    return ((0.02*i)+(0.05*j))
 
 def dz(i,j):
-    return (0.02, 0.00)
+    return (0.02, 0.05)
 
 starttime = time.time()
 
@@ -35,6 +35,8 @@ def cos(a):
     return math.cos(a)
 def tan(a):
     return math.tan(a)
+def acos(a):
+    return math.acos(a)
 def atan(a):
     return math.atan(a)
 def exp(a):
@@ -171,7 +173,7 @@ def test_speed(u0, gamma):
     return (x_total_array, iter_count, closest_to_hole)
 
 def do_loop(u0_lower, u0_upper, gamma):
-    u0_range = np.arange(u0_lower, u0_upper, ((u0_upper-u0_lower)/300.0))
+    u0_range = np.arange(u0_lower, u0_upper, ((u0_upper-u0_lower)/800.0))
     x_total_array = [None]*len(u0_range)
     iter_count = [None]*len(u0_range)
     closest_to_hole = [None]*len(u0_range)
@@ -179,8 +181,13 @@ def do_loop(u0_lower, u0_upper, gamma):
         (x_total_array[i], iter_count[i], closest_to_hole[i]) = test_speed(u0_range[i], gamma)
     return (x_total_array, iter_count, closest_to_hole, u0_range)
 
-no_of_angles = 100.0
-gamma_range = np.arange(gammai-(pi/4), gammai+(pi/4), (pi/2)/no_of_angles)
+no_of_angles = 80.0
+#plus_minus_angle = acos(dz(h[0], h[1])[1])-(pi/2)
+#print(dz(h[0], h[1])[1])
+#print(plus_minus_angle)
+gamma_range = np.arange(gammai-(pi/8), gammai+(pi/8), (pi/4)/no_of_angles)
+
+#time.sleep(30)
 
 total_range = []
 x_total_array_array = []
@@ -192,7 +199,7 @@ for g in range(len(gamma_range)):
     gamma = gamma_range[g]
     if ((g+1)%(no_of_angles/10.0) == 0.0):
         print(str((g+1)*(100.0/no_of_angles))+' %')
-    (x_total_array, iter_count, closest_to_hole, u0_range) = do_loop(10, 40, gamma)
+    (x_total_array, iter_count, closest_to_hole, u0_range) = do_loop(5, 45, gamma)
     x_total_array_array.append(x_total_array)
     iter_count_array.append(iter_count)
     closest_to_hole_array.append(closest_to_hole)
@@ -210,7 +217,7 @@ putted = []
 
 for i in range(len(closest_to_hole_array)):
     for j in range(len(closest_to_hole_array[i])):
-        if closest_to_hole_array[i][j][0] <= 0.54:
+        if closest_to_hole_array[i][j][0] <= 0.054:
             putted.append('u0: ' + str(u0_range[j]) + ' , gamma: ' + str(gamma_range[i]))
 
 for i in range(len(putted)):
@@ -218,7 +225,7 @@ for i in range(len(putted)):
         
         
 '''
-(x_array, iter_count, closest_to_hole) = test_speed(10, 0.01)
+(x_array, iter_count, closest_to_hole) = test_speed(11.4, 0.02)
         
 xplot = []
 yplot= []
@@ -231,6 +238,9 @@ for i in range(len(x_array[0])):
 
 fig = plt.figure()
 ax = p3.Axes3D(fig)
+ax.set_zlim3d(-5, 5)                    # viewrange for z-axis should be [-4,4] 
+ax.set_ylim3d(-5, 5)                    # viewrange for y-axis should be [-2,2] 
+ax.set_xlim3d(0, 10) 
 ax.plot(xplot, zplot, yplot)
 plt.show()
 '''
