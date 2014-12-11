@@ -4,5 +4,5 @@ Modelling-Project
 Golf modelling project for Uni
 
 My group was tasked with modelling a golf ball from the edge of a green into the hole.
-I was given all of the chipping to do, chipping as it turns out is nicer than rolling or bouncing.
-The equations were derived from simple models, the working out may eventually be added.
+The code has been written for both chipping the ball into the hole and bouncing the ball int the hole.
+The code for rolling(putting) the ball into the hole wasn't written by me, and so is not here.
